@@ -1,27 +1,41 @@
+using Appointr.Extentions;
+using Appointr.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+ConfigureServices(builder.Services);
+
+//------------------------[ Add services to the container ]-----------------------------
+void ConfigureServices(IServiceCollection services)
+{
+    // Add services to the container.
+    services.AddDbContext<AppDbContext>(options =>
+    {
+        //---------------------------[ Database Connection ]------------------------------------
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerConnection"));
+        //--------------------------------------------------------------------------------------
+    });
+    services.AddControllersWithViews().AddRazorRuntimeCompilation();
+    services.AddRepositories();
+    services.AddUnitOfWork();
+}
+//--------------------------------------------------------------------------------------
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+    pattern: "{controller=home}/{action=index}/{id?}"
+);
 app.Run();
