@@ -1,0 +1,29 @@
+﻿@using Appointr.Helper.Data.Toastr
+@using Newtonsoft.Json
+
+@if (TempData["messages"] != null)
+{
+    <script src="~/config/toastr/toastr.config.js"></script>
+    List<Toastr>? messages = JsonConvert.DeserializeObject<List<Toastr>>(TempData["messages"].ToString());
+    if (messages != null)
+    {
+        foreach (var message in messages)
+        {
+            var toastrScript = message.MessageType switch
+            {
+                MessageType.Success => $"toastr.success('{message.Message}', '{message.Title}');",
+                MessageType.Info => $"toastr.info('{message.Message}', '{message.Title}');",
+                MessageType.Warning => $"toastr.warning('{message.Message}', '{message.Title}');",
+                MessageType.Error => $"toastr.error('{message.Message}', '{message.Title}');",
+                _ => String.Empty
+            };
+
+            if (toastrScript != String.Empty)
+            {
+                <script>
+                    @Html.Raw(toastrScript)
+                </script>
+            }
+        }
+    }
+}

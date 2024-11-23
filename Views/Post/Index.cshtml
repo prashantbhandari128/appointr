@@ -1,0 +1,78 @@
+﻿@model List<Post>
+@{
+    ViewData["Title"] = "Post";
+}
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <h2 class="h5 mb-4 fw-bold">Posts</h2>
+    <div class="mb-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+            <div class="d-block mb-4 mb-md-0">
+                <a asp-controller="post" asp-action="add" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                    <i class="fa-solid fa-circle-plus"></i>&nbsp;Add
+                </a>
+            </div>
+        </div>
+        <hr>
+    </div>
+    @if (Model.Any())
+    {
+        <div class="card card-body table-wrapper table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="table-dark border-3 border-dark">
+                    <tr>
+                        <th class="col">S.N.</th>
+                        <th class="col">Name</th>
+                        <th class="col">Status</th>
+                        <th class="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-white border-dark">
+                    @{
+                        var count = 0;
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            <tr class="align-middle">
+                                <td>@count</td>
+                                <td>@item.PostName</td>
+                                <td>
+                                    @if (item.Status == Status.Active)
+                                    {
+                                        <span class="badge text-success">@item.Status.ToString()</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-danger">@item.Status.ToString()</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="post" asp-action="edit" asp-route-id="@item.PostId" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+                                        <i class="fa-sharp fa-solid fa-pen-to-square"></i>&nbsp;Edit
+                                    </a>
+                                    @if (item.Status == Status.Active)
+                                    {
+                                        <a asp-controller="post" asp-action="deactivate" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-success">
+                                            <i class="fa-solid fa-toggle-on fa-lg"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="post" asp-action="activate" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-toggle-off fa-lg"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p style="text-align:center">No Posts Found.</p>
+    }
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->

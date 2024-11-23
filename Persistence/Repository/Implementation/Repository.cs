@@ -40,9 +40,9 @@ namespace Appointr.Persistence.Repository.Implementation
 
         public async Task<List<TEntity>> ListAsync(int page, int pageSize) => await _context.Set<TEntity>().Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-        public TEntity? Find(int id) => _context.Set<TEntity>().Find(id);
+        public TEntity? Find(Guid id) => _context.Set<TEntity>().Find(id);
 
-        public async Task<TEntity?> FindAsync(int id) => await _context.Set<TEntity>().FindAsync(id);
+        public async Task<TEntity?> FindAsync(Guid id) => await _context.Set<TEntity>().FindAsync(id);
 
         public IEnumerable<TEntity> GetEnumerable() => _context.Set<TEntity>().AsEnumerable();
 

@@ -1,3 +1,4 @@
+using Appointr.DomainProfile;
 using Appointr.Extentions;
 using Appointr.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +11,18 @@ ConfigureServices(builder.Services);
 void ConfigureServices(IServiceCollection services)
 {
     // Add services to the container.
+    services.AddControllersWithViews().AddRazorRuntimeCompilation();
     services.AddDbContext<AppDbContext>(options =>
     {
         //---------------------------[ Database Connection ]------------------------------------
         options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerConnection"));
         //--------------------------------------------------------------------------------------
     });
-    services.AddControllersWithViews().AddRazorRuntimeCompilation();
+    services.AddAutoMapper(typeof(MappingProfile));
     services.AddRepositories();
     services.AddUnitOfWork();
+    services.AddServices();
+    services.AddHelpers();
 }
 //--------------------------------------------------------------------------------------
 
@@ -36,6 +40,8 @@ app.UseRouting();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=home}/{action=index}/{id?}"
+    pattern: "{controller=dashboard}/{action=index}/{id?}"
 );
+app.UseHttpLog();
+app.UseConcurrentRequest(30);
 app.Run();

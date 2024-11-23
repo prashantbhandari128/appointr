@@ -1,0 +1,28 @@
+﻿@model PostDto;
+@{
+    ViewData["Title"] = "Post";
+}
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <div class="card-body">
+        <h2 class="h5 mb-4 fw-bold">Post Info</h2>
+        <form method="POST" asp-controller="post" asp-action="add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row align-items-center">
+                <div class="col-md-12 mb-3">
+                    <div>
+                        <label for="name">Post Name</label><span style="color:red">*</span>
+                        <span asp-validation-for="PostName" class="text-danger"></span>
+                        <input asp-for="PostName" class="form-control" id="name" type="text" placeholder="Post Name">
+                    </div>
+                </div>  
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                <i class="fa-solid fa-circle-plus"></i>&nbsp;Add
+            </button>
+            <hr />
+            <p><b>Note:</b> <span style="color:red; font-size: 17px;">*</span> Fields are mandatory.</p>
+        </form>
+    </div>
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->

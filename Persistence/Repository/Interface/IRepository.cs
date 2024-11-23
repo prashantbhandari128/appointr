@@ -46,10 +46,10 @@
         Task<List<TEntity>> ListAsync(int page, int pageSize);
 
         // Returns an entity of type TEntity by its primary key from the database.
-        TEntity? Find(int id);
+        TEntity? Find(Guid id);
 
         // Returns an entity of type TEntity by its primary key from the database asynchronously.
-        Task<TEntity?> FindAsync(int id);
+        Task<TEntity?> FindAsync(Guid id);
 
         // Returns an IEnumerable of entities of type TEntity from the database.
         IEnumerable<TEntity> GetEnumerable();

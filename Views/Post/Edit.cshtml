@@ -1,0 +1,36 @@
+﻿@model PostDto;
+@{
+    ViewData["Title"] = "Post";
+}
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <div class="card-body">
+        <h2 class="h5 mb-4 fw-bold">Post Info</h2>
+        <form method="POST" asp-controller="post" asp-action="edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row align-items-center">
+                <div class="col-md-12 mb-3">
+                    <div>
+                        <label for="name">Post Name</label><span style="color:red">*</span>
+                        <span asp-validation-for="PostName" class="text-danger"></span>
+                        <input asp-for="PostName" class="form-control" id="name" type="text" placeholder="Post Name">
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div>
+                        <label for="name">Post Status [Disabled]</label>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()" class="form-select" onmousedown="return false;" onchange="this.value=this.defaultValue;">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+                <i class="fa-sharp fa-solid fa-pen-to-square"></i>&nbsp;Edit
+            </button>
+            <hr />
+            <p><b>Note:</b> <span style="color:red; font-size: 17px;">*</span> Fields are mandatory.</p>
+        </form>
+    </div>
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->

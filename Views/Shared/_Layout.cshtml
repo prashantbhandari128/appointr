@@ -13,7 +13,10 @@
     <!------------------------------------------------------------------------------------->
 
     <!------------------------------[Bootstrap CSS]--------------------------------->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/bootstrap.min.css" />
+
+    <!-------------------------------[toastr CSS]----------------------------------->
+    <link rel="stylesheet" href="~/lib/toastr/toastr.css">
 
     <!-----------------------------[Fontawesome CSS]-------------------------------->
     <link rel="stylesheet" href="~/lib/fontawesome-pro/css/all.css" />
@@ -21,10 +24,17 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Appointr.styles.css" asp-append-version="true" />
 </head>
+
 <body>
+    <!-----------------------------[Jquery]-------------------------------->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!----------------------------[toastr JS]------------------------------>
+    <script src="~/lib/toastr/toastr.js"></script>
+
     <nav class="navbar navbar-light bg-light p-3">
         <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
-            <a class="navbar-brand" href="#">
+            <a asp-controller="dashboard" asp-action="index" class="navbar-brand">
                 Appointr
             </a>
             <button class="navbar-toggler d-md-none collapsed mb-3" type="button" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,43 +48,43 @@
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
+                            <a asp-controller="dashboard" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Dashboard" ? "active" : String.Empty)">
                                 <i class="fa-solid fa-desktop fa-lg"></i>
                                 <span class="ml-2">Dashboard</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="post" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Post" ? "active" : String.Empty)">
                                 <i class="fa-solid fa-ranking-star fa-lg"></i>
                                 <span class="ml-2">Post</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Visitor" ? "active" : String.Empty)" href="#">
                                 <i class="fa-solid fa-user fa-lg"></i>
                                 <span class="ml-2">Visitor</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Officer" ? "active" : String.Empty)" href="#">
                                 <i class="fa-solid fa-user-tie fa-lg"></i>
                                 <span class="ml-2">Officer</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Workdays" ? "active" : String.Empty)" href="#">
                                 <i class="fa-solid fa-calendar-days fa-lg"></i>
                                 <span class="ml-2">Workdays</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Appointment" ? "active" : String.Empty)" href="#">
                                 <i class="fa-solid fa-calendar-check fa-lg"></i>
                                 <span class="ml-2">Appointment</span>
                             </a>
                         </li>                        
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Activity" ? "active" : String.Empty)" href="#">
                                 <i class="fa-regular fa-clipboard-list-check fa-lg"></i>
                                 <span class="ml-2">Activity</span>
                             </a>
@@ -87,9 +97,18 @@
             </main>
         </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <partial name="Partial/Toastr/Notification" />
+
+    <!--------------------------[Bootstrap JS]----------------------------->
+    <script src="~/lib/bootstrap/bootstrap.min.js"></script>
+
+    <!-------------------------[Fontawesome JS]---------------------------->
+    <script src="~/lib/fontawesome-pro/js/all.js"></script>
+
+    <!---------------------------[Custom JS]------------------------------->
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
