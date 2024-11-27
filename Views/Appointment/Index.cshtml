@@ -1,14 +1,14 @@
-﻿@model List<Post>
+﻿@model List<Appointment>
 @{
-    ViewData["Title"] = "Post";
+    ViewData["Title"] = "Appointment";
 }
 <!---------------------------------------------[Main Content Start]---------------------------------------------->
 <div class="shadow shadow-primary shadow-intensity-lg p-3">
-    <h2 class="h5 mb-4 fw-bold">Posts</h2>
+    <h2 class="h5 mb-4 fw-bold">Appointments</h2>
     <div class="mb-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
             <div class="d-block mb-4 mb-md-0">
-                <a asp-controller="post" asp-action="add" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                <a asp-controller="appointment" asp-action="add" class="btn btn-sm btn-primary d-inline-flex align-items-center">
                     <i class="fa-solid fa-circle-plus"></i>&nbsp;Add
                 </a>
             </div>
@@ -22,7 +22,14 @@
                 <thead class="table-dark border-3 border-dark">
                     <tr>
                         <th class="col">S.N.</th>
+                        <th class="col">Officer</th>
+                        <th class="col">Visitor</th>
                         <th class="col">Name</th>
+                        <th class="col">Date</th>
+                        <th class="col">Start Time</th>
+                        <th class="col">End Time</th>
+                        <th class="col">Added</th>
+                        <th class="col">Updated</th>
                         <th class="col">Status</th>
                         <th class="col">Action</th>
                     </tr>
@@ -35,11 +42,26 @@
                             count++;
                             <tr class="align-middle">
                                 <td>@count</td>
+                                <td>@item.Officer.Name</td>
+                                <td>@item.Visitor.Name</td>
                                 <td>@item.Name</td>
+                                <td>@item.Date</td>
+                                <td>@item.StartTime</td>
+                                <td>@item.EndTime</td>
+                                <td>@item.AddedOn</td>
+                                <td>@item.LastUpdatedOn</td>
                                 <td>
-                                    @if (item.Status == Status.Active)
+                                    @if (item.Status == AppointmentStatus.Active)
                                     {
                                         <span class="badge text-success">@item.Status.ToString()</span>
+                                    }
+                                    else if (item.Status == AppointmentStatus.Completed)
+                                    {
+                                        <span class="badge text-primary">@item.Status.ToString()</span>
+                                    }
+                                    else if (item.Status == AppointmentStatus.Deactivated)
+                                    {
+                                        <span class="badge text-warning">@item.Status.ToString()</span>
                                     }
                                     else
                                     {
@@ -47,21 +69,9 @@
                                     }
                                 </td>
                                 <td>
-                                    <a asp-controller="post" asp-action="edit" asp-route-id="@item.PostId" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+                                    <a asp-controller="appointment" asp-action="edit" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
                                         <i class="fa-sharp fa-solid fa-pen-to-square"></i>&nbsp;Edit
                                     </a>
-                                    @if (item.Status == Status.Active)
-                                    {
-                                        <a asp-controller="post" asp-action="deactivate" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-success">
-                                            <i class="fa-solid fa-toggle-on fa-lg"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="post" asp-action="activate" asp-route-id="@item.PostId" class="btn btn-sm btn-outline-danger">
-                                            <i class="fa-solid fa-toggle-off fa-lg"></i>
-                                        </a>
-                                    }
                                 </td>
                             </tr>
                         }
@@ -72,7 +82,7 @@
     }
     else
     {
-        <p style="text-align:center">No Post Found.</p>
+        <p style="text-align:center">No Appointments Found.</p>
     }
 </div>
 <!----------------------------------------------[Main Content End]----------------------------------------------->

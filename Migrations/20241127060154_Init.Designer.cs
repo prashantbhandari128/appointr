@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Appointr.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241126161753_new")]
-    partial class @new
+    [Migration("20241127060154_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -178,7 +178,7 @@ namespace Appointr.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("DaysOfWeek")
+                    b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
                     b.Property<Guid>("OfficerId")
@@ -238,10 +238,15 @@ namespace Appointr.Migrations
             modelBuilder.Entity("Appointr.Persistence.Entities.WorkDay", b =>
                 {
                     b.HasOne("Appointr.Persistence.Entities.Officer", "Officer")
-                        .WithMany()
+                        .WithMany("WorkDays")
                         .HasForeignKey("PostId");
 
                     b.Navigation("Officer");
+                });
+
+            modelBuilder.Entity("Appointr.Persistence.Entities.Officer", b =>
+                {
+                    b.Navigation("WorkDays");
                 });
 #pragma warning restore 612, 618
         }

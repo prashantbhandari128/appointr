@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Appointr.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Appointr.DTO
 {
@@ -18,6 +19,8 @@ namespace Appointr.DTO
 
         [Required]
         public TimeSpan WorkEndTime { get; set; }
+
+        public List<Days>? Days { get; set; }
 
         public bool IsWorkTimeValid => WorkEndTime > WorkStartTime;
     }

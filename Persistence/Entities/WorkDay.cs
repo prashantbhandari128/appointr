@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Appointr.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Appointr.Persistence.Entities
@@ -12,8 +13,7 @@ namespace Appointr.Persistence.Entities
         public Guid OfficerId { get; set; }
 
         [Required]
-        [Range(0,7)]
-        public int DaysOfWeek { get; set; }
+        public Days DayOfWeek { get; set; }
 
         [ForeignKey("PostId")]
         public Officer? Officer { get; set; }

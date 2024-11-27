@@ -26,5 +26,7 @@ namespace Appointr.Persistence.Entities
         
         [ForeignKey("PostId")]
         public Post? Post { get; set; }
+
+        public List<WorkDay>? WorkDays { get; set;}
     }
 }

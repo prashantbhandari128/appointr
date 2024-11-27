@@ -2,11 +2,13 @@
 using Appointr.Enum;
 using Appointr.Persistence.Entities;
 using Appointr.Service.Result;
+using Appointr.ViewModel;
 
 namespace Appointr.Service.Interface
 {
     public interface IOfficerService
     {
+        Task<List<SelectModel>> GetOfficersSelectAsync();
         Task<List<Officer>> GetAllOfficersAsync();
         Task<Officer?> GetOfficerByIdAsync(Guid officerid);
         Task<Status> GetOfficerStatusByIdAsync(Guid officerid);

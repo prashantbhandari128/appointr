@@ -41,8 +41,5 @@ namespace Appointr.Persistence.Entities
 
         [ForeignKey("VisitorId")]
         public Visitor? Visitor { get; set; }
-
-        [NotMapped]
-        public bool IsTimeDurationValid => EndTime > StartTime;
     }
 }

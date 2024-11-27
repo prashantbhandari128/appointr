@@ -4,6 +4,7 @@ using Appointr.Persistence.Entities;
 using Appointr.Persistence.UnitOfWork.Interface;
 using Appointr.Service.Interface;
 using Appointr.Service.Result;
+using Appointr.ViewModel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,12 +13,24 @@ namespace Appointr.Service.Implementation
     public class OfficerService : IOfficerService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWorkDayService _workDayService;
         private readonly IMapper _mapper;
 
-        public OfficerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OfficerService(IUnitOfWork unitOfWork, IWorkDayService workDayService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _workDayService = workDayService;
             _mapper = mapper;
+        }
+
+        public async Task<List<SelectModel>> GetOfficersSelectAsync()
+        {
+            return await _unitOfWork.Officers.GetQueryable()
+                .Select(x => new SelectModel
+                {
+                    Value = x.OfficerId,
+                    Option = x.Name
+                }).ToListAsync();
         }
 
         public Task<List<Officer>> GetAllOfficersAsync()
@@ -49,6 +62,7 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    await _workDayService.SaveWorkDaysAsync(officer.OfficerId, officerDto.Days);
                     return new OperationResult<Officer>(true, "Officer saved successfully.", rowsaffected, officer);
                 }
                 return new OperationResult<Officer>(false, "Officer failed to save.", rowsaffected, null);
@@ -69,6 +83,11 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    var deleteprevious = await _workDayService.DeletePreviousWorkDaysAsync(officer.OfficerId);
+                    if (deleteprevious.Status)
+                    {
+                        await _workDayService.SaveWorkDaysAsync(officer.OfficerId, officerDto.Days);
+                    }
                     return new OperationResult<Officer>(true, "Officer updated successfully.", rowsaffected, officer);
                 }
                 return new OperationResult<Officer>(false, "Officer failed to update.", rowsaffected, null);

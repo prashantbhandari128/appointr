@@ -4,6 +4,7 @@ using Appointr.Persistence.Entities;
 using Appointr.Persistence.UnitOfWork.Interface;
 using Appointr.Service.Interface;
 using Appointr.Service.Result;
+using Appointr.ViewModel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,16 @@ namespace Appointr.Service.Implementation
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<List<SelectModel>> GetVisitorsSelectAsync()
+        {
+            return await _unitOfWork.Visitors.GetQueryable()
+                .Select(x => new SelectModel
+                {
+                    Value = x.VisitorId,
+                    Option = x.Name
+                }).ToListAsync();
         }
 
         public Task<List<Visitor>> GetAllVisitorsAsync()

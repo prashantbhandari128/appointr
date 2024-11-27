@@ -12,13 +12,15 @@ namespace Appointr.Controllers
     {
         private readonly IOfficerService _officerService;
         private readonly IPostService _postService;
+        private readonly IWorkDayService _workDayService;
         private readonly IToastrHelper _toastrHelper;
         private readonly IMapper _mapper;
 
-        public OfficerController(IOfficerService officerService, IPostService postService, IToastrHelper toastrHelper, IMapper mapper)
+        public OfficerController(IOfficerService officerService, IPostService postService, IWorkDayService workDayService, IToastrHelper toastrHelper, IMapper mapper)
         {
             _officerService = officerService;
             _postService = postService;
+            _workDayService = workDayService;
             _toastrHelper = toastrHelper;
             _mapper = mapper;
         }
@@ -39,7 +41,7 @@ namespace Appointr.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(OfficerDto officerDto)
         {
-            if (!ModelState.IsValid || !officerDto.IsWorkTimeValid || officerDto.PostId == Guid.Empty)
+            if (!ModelState.IsValid || !officerDto.IsWorkTimeValid || officerDto.PostId == Guid.Empty || officerDto.Days == null)
             {
                 if (!officerDto.IsWorkTimeValid)
                 {
@@ -51,6 +53,11 @@ namespace Appointr.Controllers
                     _toastrHelper.AddMessage("Appointr", "Please select post.", MessageType.Warning);
                     ModelState["PostId"].Errors.Clear();
                     ModelState.AddModelError("PostId", "Please select post.");
+                }
+                if(officerDto.Days == null)
+                {
+                    _toastrHelper.AddMessage("Appointr", "Please select atleast one day of week.", MessageType.Warning);
+                    ModelState.AddModelError("Days", "Please select atleast one day of week.");
                 }
                 ViewBag.Posts = await _postService.GetPostsSelectAsync();
                 _toastrHelper.Send(this);
@@ -74,14 +81,14 @@ namespace Appointr.Controllers
             Officer? office = await _officerService.GetOfficerByIdAsync(id);
             OfficerDto officerDto = _mapper.Map<OfficerDto>(office);
             ViewBag.Posts = await _postService.GetPostsSelectAsync();
+            officerDto.Days = await _workDayService.GetOfficerWorkDaysAsync(id);
             return View(officerDto);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Edit(Guid id, OfficerDto officerDto)
         {
-            if (!ModelState.IsValid || !officerDto.IsWorkTimeValid || officerDto.PostId == Guid.Empty)
+            if (!ModelState.IsValid || !officerDto.IsWorkTimeValid || officerDto.PostId == Guid.Empty || officerDto.Days == null)
             {
                 if (!officerDto.IsWorkTimeValid)
                 {
@@ -93,6 +100,11 @@ namespace Appointr.Controllers
                     _toastrHelper.AddMessage("Appointr", "Please select post.", MessageType.Warning);
                     ModelState["PostId"].Errors.Clear();
                     ModelState.AddModelError("PostId", "Please select post.");
+                }
+                if (officerDto.Days == null)
+                {
+                    _toastrHelper.AddMessage("Appointr", "Please select atleast one day of week.", MessageType.Warning);
+                    ModelState.AddModelError("Days", "Please select atleast one day of week.");
                 }
                 ViewBag.Posts = await _postService.GetPostsSelectAsync();
                 _toastrHelper.Send(this);

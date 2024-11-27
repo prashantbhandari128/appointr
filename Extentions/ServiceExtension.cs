@@ -34,9 +34,12 @@ namespace Appointr.Extentions
         //-----------------------------[ Inject Service Here ]----------------------------------
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddTransient<IOfficerService, OfficerService>();
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<IVisitorService, VisitorService>();
+            services.AddTransient<IWorkDayService, WorkDayService>();
         }
         //--------------------------------------------------------------------------------------
 

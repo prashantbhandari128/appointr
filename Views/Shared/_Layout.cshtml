@@ -70,26 +70,20 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Officer" ? "active" : String.Empty)" href="#">
+                            <a asp-controller="officer" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Officer" ? "active" : String.Empty)">
                                 <i class="fa-solid fa-user-tie fa-lg"></i>
                                 <span class="ml-2">Officer</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Workdays" ? "active" : String.Empty)" href="#">
-                                <i class="fa-solid fa-calendar-days fa-lg"></i>
-                                <span class="ml-2">Workdays</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Appointment" ? "active" : String.Empty)" href="#">
+                            <a asp-controller="appointment" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Appointment" ? "active" : String.Empty)">
                                 <i class="fa-solid fa-calendar-check fa-lg"></i>
                                 <span class="ml-2">Appointment</span>
                             </a>
                         </li>                        
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Activity" ? "active" : String.Empty)" href="#">
-                                <i class="fa-regular fa-clipboard-list-check fa-lg"></i>
+                            <a asp-controller="activity" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Activity" ? "active" : String.Empty)">
+                                <i class="fa-solid fa-calendar-days fa-lg"></i>
                                 <span class="ml-2">Activity</span>
                             </a>
                         </li>

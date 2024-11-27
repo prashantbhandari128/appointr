@@ -19,6 +19,6 @@ namespace Appointr.DTO
         [Required]
         public DateTime EndDateTime { get; set; }
 
-        public bool IsActivityDurationValid => EndDateTime > StartDateTime;
+        public bool IsActivityDurationValid => EndDateTime > StartDateTime && StartDateTime >= DateTime.Now;
     }
 }

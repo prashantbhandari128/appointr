@@ -6,11 +6,39 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Appointr.Migrations
 {
     /// <inheritdoc />
-    public partial class @new : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.PostId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Visitors",
+                columns: table => new
+                {
+                    VisitorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visitors", x => x.VisitorId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Officers",
                 columns: table => new
@@ -93,7 +121,7 @@ namespace Appointr.Migrations
                 {
                     WorkDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OfficerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DaysOfWeek = table.Column<int>(type: "int", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -145,7 +173,13 @@ namespace Appointr.Migrations
                 name: "WorkDays");
 
             migrationBuilder.DropTable(
+                name: "Visitors");
+
+            migrationBuilder.DropTable(
                 name: "Officers");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
         }
     }
 }

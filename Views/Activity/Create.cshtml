@@ -1,0 +1,65 @@
+﻿@model ActivityDto;
+@{
+    ViewData["Title"] = "Activity";
+}
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <div class="card-body">
+        <h2 class="h5 mb-4 fw-bold">Activity Info</h2>
+        <form method="POST" asp-controller="activity" asp-action="create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="type">Type</label><span style="color:red">*</span>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                        <select style="width: 100%" asp-for="Type" asp-items="Html.GetEnumSelectList<ActivityType>()" class="select2 form-control" id="type">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="officer">Officer</label><span style="color:red">*</span>
+                        <span asp-validation-for="OfficerId" class="text-danger"></span>
+                        <select style="width: 100%" asp-for="OfficerId" class="select2 form-control" id="officer">
+                            <option value="">--SELECT--OFFICER--</option>
+                            @foreach (var item in ViewBag.Officers as List<SelectModel>)
+                            {
+                                <option value="@item.Value">@item.Option</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="start-date-time">Start Date Time</label><span style="color:red">*</span>
+                        <span asp-validation-for="StartDateTime" class="text-danger"></span>
+                        <input asp-for="StartDateTime" class="form-control" id="start-date-time" type="datetime-local">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="work-end-time">End Date Time</label><span style="color:red">*</span>
+                        <span asp-validation-for="EndDateTime" class="text-danger"></span>
+                        <input asp-for="EndDateTime" class="form-control" id="end-date-time" type="datetime-local">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                <i class="fa-solid fa-circle-plus"></i>&nbsp;Create
+            </button>
+            <hr />
+            <p><b>Note:</b> <span style="color:red; font-size: 17px;">*</span> Fields are mandatory.</p>
+        </form>
+    </div>
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->
+
+<script>
+    $(document).ready(function () {
+        // Apply Select2 to the dropdown
+        $('.select2').select2();
+    });
+</script>

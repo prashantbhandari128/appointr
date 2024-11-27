@@ -20,7 +20,7 @@
                     <div>
                         <label for="post">Post</label><span style="color:red">*</span>
                         <span asp-validation-for="PostId" class="text-danger"></span>
-                        <select asp-for="PostId" class="select2 form-control" id="post">
+                        <select style="width: 100%" asp-for="PostId" class="select2 form-control" id="post">
                             <option value="">--SELECT--POST--</option>
                             @foreach (var item in ViewBag.Posts as List<SelectModel>)
                             {
@@ -43,6 +43,16 @@
                         <label for="work-end-time">Work End Time</label><span style="color:red">*</span>
                         <span asp-validation-for="WorkEndTime" class="text-danger"></span>
                         <input asp-for="WorkEndTime" class="form-control" id="work-end-time" type="time">
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-12 mb-3">
+                    <div>
+                        <label for="name">Work Days</label><span style="color:red">*</span>
+                        <span asp-validation-for="Days" class="text-danger"></span>
+                        <select style="width: 100%" asp-for="Days" asp-items="Html.GetEnumSelectList<Days>()" class="select2 form-control" id="workdays" multiple="multiple">
+                        </select>
                     </div>
                 </div>
             </div>
