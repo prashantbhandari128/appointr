@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Appointr.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241122084627_Init")]
+    [Migration("20241124041855_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace Appointr.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("PostName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -42,6 +42,33 @@ namespace Appointr.Migrations
                     b.HasKey("PostId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Appointr.Persistence.Entities.Visitor", b =>
+                {
+                    b.Property<Guid>("VisitorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("VisitorId");
+
+                    b.ToTable("Visitors");
                 });
 #pragma warning restore 612, 618
         }

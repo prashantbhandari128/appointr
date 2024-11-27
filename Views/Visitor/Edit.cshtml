@@ -1,12 +1,12 @@
-﻿@model PostDto;
+﻿@model VisitorDto;
 @{
-    ViewData["Title"] = "Post";
+    ViewData["Title"] = "Visitor";
 }
 <!---------------------------------------------[Main Content Start]---------------------------------------------->
 <div class="shadow shadow-primary shadow-intensity-lg p-3">
     <div class="card-body">
-        <h2 class="h5 mb-4 fw-bold">Post Info</h2>
-        <form method="POST" asp-controller="post" asp-action="edit">
+        <h2 class="h5 mb-4 fw-bold">Visitor Info</h2>
+        <form method="POST" asp-controller="visitor" asp-action="edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row align-items-center">
                 <div class="col-md-12 mb-3">
@@ -14,6 +14,22 @@
                         <label for="name">Name</label><span style="color:red">*</span>
                         <span asp-validation-for="Name" class="text-danger"></span>
                         <input asp-for="Name" class="form-control" id="name" type="text" placeholder="Name">
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="mobile">Mobile</label><span style="color:red">*</span>
+                        <span asp-validation-for="Mobile" class="text-danger"></span>
+                        <input asp-for="Mobile" class="form-control" id="mobile" type="text" placeholder="Mobile">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="email">Email</label><span style="color:red">*</span>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <input asp-for="Email" class="form-control" id="email" type="text" placeholder="Email">
                     </div>
                 </div>
             </div>

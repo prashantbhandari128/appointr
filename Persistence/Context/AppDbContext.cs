@@ -1,6 +1,5 @@
 ﻿using Appointr.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Appointr.Persistence.Context
 {
@@ -11,13 +10,13 @@ namespace Appointr.Persistence.Context
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
-
         //---------------[ Set Here ]-----------------
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Officer> Officers { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<WorkDay> WorkDays { get; set; }
         //--------------------------------------------
     }
 }

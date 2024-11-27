@@ -21,6 +21,8 @@
     <!-----------------------------[Fontawesome CSS]-------------------------------->
     <link rel="stylesheet" href="~/lib/fontawesome-pro/css/all.css" />
 
+    <link rel="stylesheet" href="~/lib/select2/select2.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Appointr.styles.css" asp-append-version="true" />
 </head>
@@ -28,6 +30,8 @@
 <body>
     <!-----------------------------[Jquery]-------------------------------->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/select2/select2.min.js"></script>
 
     <!----------------------------[toastr JS]------------------------------>
     <script src="~/lib/toastr/toastr.js"></script>
@@ -60,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewData["Title"]?.ToString() == "Visitor" ? "active" : String.Empty)" href="#">
+                            <a asp-controller="visitor" asp-action="index" class="nav-link @(ViewData["Title"]?.ToString() == "Visitor" ? "active" : String.Empty)">
                                 <i class="fa-solid fa-user fa-lg"></i>
                                 <span class="ml-2">Visitor</span>
                             </a>
@@ -108,7 +112,6 @@
 
     <!---------------------------[Custom JS]------------------------------->
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

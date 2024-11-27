@@ -1,0 +1,64 @@
+﻿@model OfficerDto;
+@{
+    ViewData["Title"] = "Officer";
+}
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <div class="card-body">
+        <h2 class="h5 mb-4 fw-bold">Officer Info</h2>
+        <form method="POST" asp-controller="officer" asp-action="edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="name">Name</label><span style="color:red">*</span>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <input asp-for="Name" class="form-control" id="name" type="text" placeholder="Name">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="post">Post</label><span style="color:red">*</span>
+                        <span asp-validation-for="PostId" class="text-danger"></span>
+                        <select asp-for="PostId" class="select2 form-control" id="post">
+                            <option value="">--SELECT--POST--</option>
+                            @foreach (var item in ViewBag.Posts as List<SelectModel>)
+                            {
+                                <option value="@item.Value">@item.Option</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="work-start-time">Work Start Time</label><span style="color:red">*</span>
+                        <span asp-validation-for="WorkStartTime" class="text-danger"></span>
+                        <input asp-for="WorkStartTime" class="form-control" id="work-start-time" type="time">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <label for="work-end-time">Work End Time</label><span style="color:red">*</span>
+                        <span asp-validation-for="WorkEndTime" class="text-danger"></span>
+                        <input asp-for="WorkEndTime" class="form-control" id="work-end-time" type="time">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
+                <i class="fa-sharp fa-solid fa-pen-to-square"></i>&nbsp;Edit
+            </button>
+            <hr />
+            <p><b>Note:</b> <span style="color:red; font-size: 17px;">*</span> Fields are mandatory.</p>
+        </form>
+    </div>
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->
+
+<script>
+    $(document).ready(function () {
+        // Apply Select2 to the dropdown
+        $('.select2').select2();
+    });
+</script>

@@ -2,31 +2,33 @@
 using Appointr.Helper.Data.Toastr;
 using Appointr.Helper.Interface;
 using Appointr.Persistence.Entities;
+using Appointr.Service.Implementation;
 using Appointr.Service.Interface;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointr.Controllers
 {
-    public class PostController : Controller
+    public class VisitorController : Controller
     {
-        private readonly IPostService _postService;
         private readonly IToastrHelper _toastrHelper;
+        private readonly IVisitorService _visitorService;
         private readonly IMapper _mapper;
 
-        public PostController(IPostService postService, IToastrHelper toastrHelper, IMapper mapper)
+        public VisitorController(IToastrHelper toastrHelper, IVisitorService visitorService, IMapper mapper)
         {
-            _postService = postService;
             _toastrHelper = toastrHelper;
+            _visitorService = visitorService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<Post> posts = await _postService.GetAllPostsAsync();
-            return View(posts);
+            List<Visitor> visitors = await _visitorService.GetAllVisitorsAsync();
+            return View(visitors);
         }
+
 
         [HttpGet]
         public IActionResult Add()
@@ -35,13 +37,13 @@ namespace Appointr.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(PostDto postDto)
+        public async Task<IActionResult> Add(VisitorDto visitorDto)
         {
             if (!ModelState.IsValid)
             {
-                return View(postDto);
+                return View(visitorDto);
             }
-            var result = await _postService.AddPostAsync(postDto);
+            var result = await _visitorService.AddVisitorAsync(visitorDto);
             if (result.Status == true)
             {
                 _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Success);
@@ -49,26 +51,26 @@ namespace Appointr.Controllers
             }
             _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Error);
             ModelState.AddModelError("", result.Message);
-            return View(postDto);
+            return View(visitorDto);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            Post? post = await _postService.GetPostByIdAsync(id);
-            PostDto postDto = _mapper.Map<PostDto>(post);
-            return View(postDto);
+            Visitor? visitor = await _visitorService.GetVisitorByIdAsync(id);
+            VisitorDto visitorDto = _mapper.Map<VisitorDto>(visitor);
+            return View(visitorDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, PostDto postDto)
+        public async Task<IActionResult> Edit(Guid id, VisitorDto visitorDto)
         {
             if (!ModelState.IsValid)
             {
-                return View(postDto);
+                return View(visitorDto);
             }
-            postDto.PostId = id;
-            var result = await _postService.UpdatePostAsync(postDto);
+            visitorDto.VisitorId = id;
+            var result = await _visitorService.UpdateVisitorAsync(visitorDto);
             if (result.Status == true)
             {
                 _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Success);
@@ -76,13 +78,14 @@ namespace Appointr.Controllers
             }
             _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Error);
             ModelState.AddModelError("", result.Message);
-            return View(postDto);
+            return View(visitorDto);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Activate(Guid id)
         {
-            var result = await _postService.ActivatePostAsync(id);
+            var result = await _visitorService.ActivateVisitorAsync(id);
             if (result.Status == true)
             {
                 _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Success);
@@ -97,7 +100,7 @@ namespace Appointr.Controllers
         [HttpGet]
         public async Task<IActionResult> Deactivate(Guid id)
         {
-            var result = await _postService.DeactivatePostAsync(id);
+            var result = await _visitorService.DeactivateVisitorAsync(id);
             if (result.Status == true)
             {
                 _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Success);

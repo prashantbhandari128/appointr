@@ -43,5 +43,5 @@ app.MapControllerRoute(
     pattern: "{controller=dashboard}/{action=index}/{id?}"
 );
 app.UseHttpLog();
-app.UseConcurrentRequest(30);
+app.UseConcurrentRequest(300);
 app.Run();

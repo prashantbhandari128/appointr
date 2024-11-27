@@ -1,9 +1,12 @@
 ﻿using Appointr.DTO;
+using Appointr.Enum;
 using Appointr.Persistence.Entities;
 using Appointr.Persistence.UnitOfWork.Interface;
 using Appointr.Service.Interface;
 using Appointr.Service.Result;
+using Appointr.ViewModel;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Appointr.Service.Implementation
 {
@@ -18,6 +21,16 @@ namespace Appointr.Service.Implementation
             _mapper = mapper;
         }
 
+        public async Task<List<SelectModel>> GetPostsSelectAsync()
+        {
+            return await _unitOfWork.Posts.GetQueryable()
+                .Select(x => new SelectModel
+                {
+                    Value = x.PostId,
+                    Option = x.Name
+                }).ToListAsync();
+        }
+
         public Task<List<Post>> GetAllPostsAsync()
         {
             return _unitOfWork.Posts.ListAsync();
@@ -28,11 +41,21 @@ namespace Appointr.Service.Implementation
             return _unitOfWork.Posts.FindAsync(postid);
         }
 
+        public async Task<Status> GetPostStatusByIdAsync(Guid postid)
+        {
+            return await _unitOfWork.Posts.GetQueryable()
+                .AsNoTracking()
+                .Where(x => x.PostId == postid)
+                .Select(x => x.Status)
+                .SingleAsync();
+        }
+
         public async Task<OperationResult<Post>> AddPostAsync(PostDto postDto)
         {
             try
             {
                 Post post = _mapper.Map<Post>(postDto);
+                post.Status = Status.Active;
                 await _unitOfWork.Posts.InsertAsync(post);
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
@@ -52,6 +75,7 @@ namespace Appointr.Service.Implementation
             try
             {
                 Post post = _mapper.Map<Post>(postDto);
+                post.Status = await GetPostStatusByIdAsync(postDto.PostId);
                 _unitOfWork.Posts.Update(post);
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
@@ -75,14 +99,14 @@ namespace Appointr.Service.Implementation
                 {
                     return new ProcessResult(false, $"{postid} : Post not found.");
                 }
-                post.Status = Enum.Status.Active;
+                post.Status = Status.Active;
                 _unitOfWork.Posts.Update(post);
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
-                    return new ProcessResult(true, $"{post.PostName} : Post activated successfully.");
+                    return new ProcessResult(true, $"Post activated successfully.");
                 }
-                return new ProcessResult(false, $"{post.PostName} : Post failed to activate.");
+                return new ProcessResult(false, $"Post failed to activate.");
             }
             catch (Exception ex)
             {
@@ -99,14 +123,14 @@ namespace Appointr.Service.Implementation
                 {
                     return new ProcessResult(false, "Post not found.");
                 }
-                post.Status = Enum.Status.Inactive;
+                post.Status = Status.Inactive;
                 _unitOfWork.Posts.Update(post);
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
-                    return new ProcessResult(true, $"{post.PostName} : Post deactivated successfully.");
+                    return new ProcessResult(true, $"Post deactivated successfully.");
                 }
-                return new ProcessResult(false, $"{post.PostName} : Post failed to deactivate.");
+                return new ProcessResult(false, $"Post failed to deactivate.");
             }
             catch (Exception ex)
             {

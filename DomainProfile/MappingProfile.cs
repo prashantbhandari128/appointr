@@ -11,6 +11,10 @@ namespace Appointr.DomainProfile
             // Define object-to-object mapping here
             CreateMap<Post, PostDto>();
             CreateMap<PostDto, Post>();
+            CreateMap<Visitor, VisitorDto>();
+            CreateMap<VisitorDto, Visitor>();
+            CreateMap<Officer, OfficerDto>();
+            CreateMap<OfficerDto, Officer>();
         }
     }
 }

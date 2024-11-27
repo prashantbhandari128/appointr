@@ -15,7 +15,12 @@ namespace Appointr.Extentions
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddTransient<IAppointmentRepository, AppointmentRepository>();
+            services.AddTransient<IOfficerRepository, OfficerRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IVisitorRepository, VisitorRepository>();
+            services.AddTransient<IWorkDayRepository, WorkDayRepository>();
         }
         //--------------------------------------------------------------------------------------
 
@@ -29,7 +34,9 @@ namespace Appointr.Extentions
         //-----------------------------[ Inject Service Here ]----------------------------------
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IOfficerService, OfficerService>();
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IVisitorService, VisitorService>();
         }
         //--------------------------------------------------------------------------------------
 
