@@ -15,10 +15,10 @@ namespace Appointr.DTO
         public Guid PostId { get; set; }
 
         [Required]
-        public TimeSpan WorkStartTime { get; set; }
+        public TimeOnly WorkStartTime { get; set; }
 
         [Required]
-        public TimeSpan WorkEndTime { get; set; }
+        public TimeOnly WorkEndTime { get; set; }
 
         public List<Days>? Days { get; set; }
 

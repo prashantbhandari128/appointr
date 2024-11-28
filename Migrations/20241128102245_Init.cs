@@ -46,8 +46,8 @@ namespace Appointr.Migrations
                     OfficerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkStartTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    WorkEndTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    WorkStartTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    WorkEndTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -121,17 +121,17 @@ namespace Appointr.Migrations
                 {
                     WorkDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OfficerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
-                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WorkDays", x => x.WorkDayId);
                     table.ForeignKey(
-                        name: "FK_WorkDays_Officers_PostId",
-                        column: x => x.PostId,
+                        name: "FK_WorkDays_Officers_OfficerId",
+                        column: x => x.OfficerId,
                         principalTable: "Officers",
-                        principalColumn: "OfficerId");
+                        principalColumn: "OfficerId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -155,9 +155,9 @@ namespace Appointr.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkDays_PostId",
+                name: "IX_WorkDays_OfficerId",
                 table: "WorkDays",
-                column: "PostId");
+                column: "OfficerId");
         }
 
         /// <inheritdoc />

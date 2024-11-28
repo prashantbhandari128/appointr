@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Appointr.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241127060154_Init")]
+    [Migration("20241128102245_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -113,10 +113,10 @@ namespace Appointr.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("WorkEndTime")
+                    b.Property<TimeOnly>("WorkEndTime")
                         .HasColumnType("time");
 
-                    b.Property<TimeSpan>("WorkStartTime")
+                    b.Property<TimeOnly>("WorkStartTime")
                         .HasColumnType("time");
 
                     b.HasKey("OfficerId");
@@ -184,12 +184,9 @@ namespace Appointr.Migrations
                     b.Property<Guid>("OfficerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("WorkDayId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("OfficerId");
 
                     b.ToTable("WorkDays");
                 });
@@ -237,11 +234,11 @@ namespace Appointr.Migrations
 
             modelBuilder.Entity("Appointr.Persistence.Entities.WorkDay", b =>
                 {
-                    b.HasOne("Appointr.Persistence.Entities.Officer", "Officer")
+                    b.HasOne("Appointr.Persistence.Entities.Officer", null)
                         .WithMany("WorkDays")
-                        .HasForeignKey("PostId");
-
-                    b.Navigation("Officer");
+                        .HasForeignKey("OfficerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Appointr.Persistence.Entities.Officer", b =>

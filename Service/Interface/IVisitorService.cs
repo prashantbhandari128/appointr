@@ -16,5 +16,6 @@ namespace Appointr.Service.Interface
         Task<OperationResult<Visitor>> UpdateVisitorAsync(VisitorDto visitorDto);
         Task<ProcessResult> ActivateVisitorAsync(Guid visitorid);
         Task<ProcessResult> DeactivateVisitorAsync(Guid visitorid);
+        Task<bool> VisitorHasAppointmentAsync(Guid visitorid, DateOnly date);
     }
 }

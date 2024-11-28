@@ -1,5 +1,4 @@
-﻿using Appointr.Helper.Data.Toastr;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Appointr.Controllers
 {

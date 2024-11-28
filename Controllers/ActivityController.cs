@@ -2,7 +2,6 @@
 using Appointr.Enum;
 using Appointr.Helper.Data.Toastr;
 using Appointr.Helper.Interface;
-using Appointr.Service.Implementation;
 using Appointr.Service.Interface;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

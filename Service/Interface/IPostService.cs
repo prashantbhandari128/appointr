@@ -16,5 +16,6 @@ namespace Appointr.Service.Interface
         Task<OperationResult<Post>> UpdatePostAsync(PostDto postDto);
         Task<ProcessResult> ActivatePostAsync(Guid postid);
         Task<ProcessResult> DeactivatePostAsync(Guid postid);
+        Task<bool> PostHasOfficerAsync(Guid postid);
     }
 }

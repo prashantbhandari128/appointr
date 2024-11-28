@@ -11,11 +11,13 @@ namespace Appointr.Service.Implementation
 {
     public class AppointmentService : IAppointmentService
     {
+        private readonly IActivityService _activityService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AppointmentService(IActivityService activityService, IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _activityService = activityService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -58,6 +60,12 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    ActivityDto activityDto = new ActivityDto();
+                    activityDto.OfficerId = appointmentDto.OfficerId;
+                    activityDto.Type = ActivityType.Appointment;
+                    activityDto.StartDateTime = appointment.Date.ToDateTime(appointment.StartTime);
+                    activityDto.EndDateTime = appointment.Date.ToDateTime(appointment.EndTime);
+                    await _activityService.CreateActivityAsync(activityDto);
                     return new OperationResult<Appointment>(true, "Appointmant saved successfully.", rowsaffected, appointment);
                 }
                 return new OperationResult<Appointment>(false, "Appointmant failed to save.", rowsaffected, null);

@@ -118,24 +118,36 @@ namespace Appointr.Service.Implementation
         {
             try
             {
-                Post? post = await GetPostByIdAsync(postid);
-                if (post == null)
+                if(await PostHasOfficerAsync(postid))
                 {
-                    return new ProcessResult(false, "Post not found.");
+                    return new ProcessResult(false, "Post is used in Officer.");
                 }
-                post.Status = Status.Inactive;
-                _unitOfWork.Posts.Update(post);
-                int rowsaffected = await _unitOfWork.CompleteAsync();
-                if (rowsaffected == 1)
+                else
                 {
-                    return new ProcessResult(true, $"Post deactivated successfully.");
+                    Post? post = await GetPostByIdAsync(postid);
+                    if (post == null)
+                    {
+                        return new ProcessResult(false, "Post not found.");
+                    }
+                    post.Status = Status.Inactive;
+                    _unitOfWork.Posts.Update(post);
+                    int rowsaffected = await _unitOfWork.CompleteAsync();
+                    if (rowsaffected == 1)
+                    {
+                        return new ProcessResult(true, $"Post deactivated successfully.");
+                    }
+                    return new ProcessResult(false, $"Post failed to deactivate.");
                 }
-                return new ProcessResult(false, $"Post failed to deactivate.");
             }
             catch (Exception ex)
             {
                 return new ProcessResult(false, $"Exception Occurred : {ex.Message}.");
             }
+        }
+
+        public async Task<bool> PostHasOfficerAsync(Guid postid)
+        {
+            return await _unitOfWork.Officers.GetQueryable().AnyAsync(x => x.PostId == postid && x.Status == Status.Active );
         }
     }
 }

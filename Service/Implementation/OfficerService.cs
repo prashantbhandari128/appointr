@@ -7,19 +7,22 @@ using Appointr.Service.Result;
 using Appointr.ViewModel;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Appointr.Service.Implementation
 {
     public class OfficerService : IOfficerService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IWorkDayService _workDayService;
+        private readonly IPostService _postService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public OfficerService(IUnitOfWork unitOfWork, IWorkDayService workDayService, IMapper mapper)
+        public OfficerService(IWorkDayService workDayService, IPostService postService, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
             _workDayService = workDayService;
+            _postService = postService;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -100,21 +103,30 @@ namespace Appointr.Service.Implementation
 
         public async Task<ProcessResult> ActivateOfficerAsync(Guid officerid)
         {
+            Officer? officer = await GetOfficerByIdAsync(officerid);
             try
             {
-                Officer? officer = await GetOfficerByIdAsync(officerid);
-                if (officer == null)
+                if(await _postService.GetPostStatusByIdAsync(officer.PostId) == Status.Inactive)
                 {
-                    return new ProcessResult(false, "Officer not found.");
+                    return new ProcessResult(false, "Officer`s post is inactive.");
                 }
-                officer.Status = Status.Active;
-                _unitOfWork.Officers.Update(officer);
-                int rowsaffected = await _unitOfWork.CompleteAsync();
-                if (rowsaffected == 1)
+                else
                 {
-                    return new ProcessResult(true, "Officer activated successfully.");
+                    if (officer == null)
+                    {
+                        return new ProcessResult(false, "Officer not found.");
+                    }
+                    officer.Status = Status.Active;
+                    _unitOfWork.Officers.Update(officer);
+                    int rowsaffected = await _unitOfWork.CompleteAsync();
+                    if (rowsaffected == 1)
+                    {
+                        await _unitOfWork.Appointments.GetEntitySet().Include(x => x.Visitor).Where(x => x.OfficerId == officerid && x.Status == AppointmentStatus.Deactivated && x.Date >= DateOnly.FromDateTime(DateTime.Now) && x.Visitor.Status == Status.Active)
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Status, AppointmentStatus.Active));
+                        return new ProcessResult(true, "Officer activated successfully.");
+                    }
+                    return new ProcessResult(false, "Officer failed to activate.");
                 }
-                return new ProcessResult(false, "Officer failed to activate.");
             }
             catch (Exception ex)
             {
@@ -136,6 +148,8 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    await _unitOfWork.Appointments.GetEntitySet().Where(x => x.OfficerId == officerid && x.Status == AppointmentStatus.Active && x.Date >= DateOnly.FromDateTime(DateTime.Now))
+                        .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Status, AppointmentStatus.Deactivated));
                     return new ProcessResult(true, "Officer deactivated successfully.");
                 }
                 return new ProcessResult(false, "Officer failed to deactivate.");
@@ -144,6 +158,40 @@ namespace Appointr.Service.Implementation
             {
                 return new ProcessResult(false, $"Exception Occurred : {ex.Message}.");
             }
+        }
+
+        public async Task<bool> IsOfficerBusyAsync(Guid officerid, DateOnly date)
+        {
+            return await _unitOfWork.Activities
+               .GetQueryable()
+               .AnyAsync(x => x.OfficerId == officerid &&
+                   DateOnly.FromDateTime(x.StartDateTime) <= date &&
+                   DateOnly.FromDateTime(x.EndDateTime) >= date &&
+                   x.Status == ActivityStatus.Active);
+        }
+
+        public async Task<bool> CheckOfficerWorkDaysAsync(Guid officerId, int day)
+        {
+            var workdays = await _workDayService.GetOfficerWorkDaysAsync(officerId);
+            return workdays.Any(x => (int)x == day);
+        }
+
+        public async Task<bool> CheckOfficerStartEndTime(Guid officerid, TimeOnly starttime, TimeOnly endtime)
+        {
+            Officer? officer = await GetOfficerByIdAsync(officerid);
+            return FallsBetween(officer.WorkStartTime, officer.WorkEndTime, starttime, endtime);
+        }
+
+        public static bool FallsBetween(TimeOnly startTime1, TimeOnly endTime1, TimeOnly startTime2, TimeOnly endTime2)
+        {
+            // Ensure valid time ranges
+            if (startTime1 > endTime1 || startTime2 > endTime2)
+            {
+                return false;
+            }
+
+            // Check if the second range is completely within the first range
+            return startTime2 >= startTime1 && endTime2 <= endTime1;
         }
     }
 }

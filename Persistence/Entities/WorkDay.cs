@@ -14,8 +14,5 @@ namespace Appointr.Persistence.Entities
 
         [Required]
         public Days DayOfWeek { get; set; }
-
-        [ForeignKey("PostId")]
-        public Officer? Officer { get; set; }
     }
 }

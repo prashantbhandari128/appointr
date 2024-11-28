@@ -16,5 +16,8 @@ namespace Appointr.Service.Interface
         Task<OperationResult<Officer>> UpdateOfficerAsync(OfficerDto officerDto);
         Task<ProcessResult> ActivateOfficerAsync(Guid officerid);
         Task<ProcessResult> DeactivateOfficerAsync(Guid officerid);
+        Task<bool> IsOfficerBusyAsync(Guid officerid, DateOnly date);
+        Task<bool> CheckOfficerWorkDaysAsync(Guid officerid,int day);
+        Task<bool> CheckOfficerStartEndTime(Guid officerid, TimeOnly startdate, TimeOnly enddate);
     }
 }

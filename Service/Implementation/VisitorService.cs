@@ -100,6 +100,8 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    await _unitOfWork.Appointments.GetEntitySet().Include(x => x.Officer).Where(x => x.VisitorId == visitorid && x.Status == AppointmentStatus.Deactivated && x.Date >= DateOnly.FromDateTime(DateTime.Now) && x.Officer.Status == Status.Active)
+                        .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Status, AppointmentStatus.Active));
                     return new ProcessResult(true, "Visitor activated successfully.");
                 }
                 return new ProcessResult(false, "Visitor failed to activate.");
@@ -124,6 +126,8 @@ namespace Appointr.Service.Implementation
                 int rowsaffected = await _unitOfWork.CompleteAsync();
                 if (rowsaffected == 1)
                 {
+                    await _unitOfWork.Appointments.GetEntitySet().Where(x => x.VisitorId == visitorid && x.Status == AppointmentStatus.Active && x.Date >= DateOnly.FromDateTime(DateTime.Now))
+                        .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Status, AppointmentStatus.Deactivated));
                     return new ProcessResult(true, "Visitor deactivated successfully.");
                 }
                 return new ProcessResult(false, "Visitor failed to deactivate.");
@@ -132,6 +136,17 @@ namespace Appointr.Service.Implementation
             {
                 return new ProcessResult(false, $"Exception Occurred : {ex.Message}.");
             }
+        }
+
+        public async Task<bool> VisitorHasAppointmentAsync(Guid visitorid, DateOnly date)
+        {
+            return await _unitOfWork.Appointments
+                .GetQueryable()
+                .AnyAsync(x =>
+                    x.VisitorId == visitorid &&
+                    x.Date == date &&
+                    (x.Status == AppointmentStatus.Active || x.Status == AppointmentStatus.Deactivated)
+                );
         }
     }
 }

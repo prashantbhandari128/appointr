@@ -50,6 +50,8 @@ namespace Appointr.Persistence.Repository.Implementation
 
         public IQueryable<TEntity> GetQueryable() => _context.Set<TEntity>().AsQueryable();
 
+        public DbSet<TEntity> GetEntitySet() => _context.Set<TEntity>();
+
         public void Dispose()
         {
             Dispose(true);

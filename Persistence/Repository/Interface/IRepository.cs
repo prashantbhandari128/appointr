@@ -1,4 +1,6 @@
-﻿namespace Appointr.Persistence.Repository.Interface
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Appointr.Persistence.Repository.Interface
 {
     /// <summary>
     /// Represents a generic repository interface for interacting with entities of type TEntity in a database.
@@ -59,5 +61,8 @@
 
         // Returns an IQueryable of entities of type TEntity from the database.
         IQueryable<TEntity> GetQueryable();
+
+        // Returns the DbSet for the specified entity type TEntity from the DbContext.
+        DbSet<TEntity> GetEntitySet();
     }
 }

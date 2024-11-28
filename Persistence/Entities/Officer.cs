@@ -17,10 +17,10 @@ namespace Appointr.Persistence.Entities
         public Guid PostId { get; set; }
 
         [Required]
-        public TimeSpan WorkStartTime { get; set; }
+        public TimeOnly WorkStartTime { get; set; }
 
         [Required]
-        public TimeSpan WorkEndTime { get; set; }
+        public TimeOnly WorkEndTime { get; set; }
 
         public Status Status { get; set; } = Status.Active;
         
