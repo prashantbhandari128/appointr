@@ -50,6 +50,8 @@ namespace Appointr.Service.Implementation
         }
         public async Task<OperationResult<Appointment>> AddAppointmentAsync(AppointmentDto appointmentDto)
         {
+            await _unitOfWork.Appointments.GetEntitySet().Include(x => x.Visitor).Where(x => x.OfficerId == appointmentDto.OfficerId && x.Status == AppointmentStatus.Deactivated && x.Date == appointmentDto.Date && x.StartTime == appointmentDto.StartTime && x.EndTime == appointmentDto.EndTime)
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.Status, AppointmentStatus.Cancelled));
             try
             {
                 Appointment appointment = _mapper.Map<Appointment>(appointmentDto);
@@ -94,6 +96,36 @@ namespace Appointr.Service.Implementation
             catch (Exception ex)
             {
                 return new OperationResult<Appointment>(false, $"Exception Occurred : {ex.Message}", 0, null);
+            }
+        }
+        public async Task<ProcessResult> CancelAppointmentAsync(Guid appointmentid)
+        {
+            try
+            {
+                Appointment? appointment = await GetAppointmentByIdAsync(appointmentid);
+                if (appointment == null)
+                {
+                    return new ProcessResult(false, "Appointment not found.");
+                }
+                if(appointment.Status == AppointmentStatus.Active || appointment.Status == AppointmentStatus.Deactivated)
+                {
+                    appointment.Status = AppointmentStatus.Cancelled;
+                    _unitOfWork.Appointments.Update(appointment);
+                    int rowsaffected = await _unitOfWork.CompleteAsync();
+                    if (rowsaffected == 1)
+                    {
+                        return new ProcessResult(true, $"Appointment canceled successfully.");
+                    }
+                    return new ProcessResult(false, $"Appointment Failed to Cancel.");
+                }
+                else
+                {
+                    return new ProcessResult(true, $"Appointment cannot be Canceled.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ProcessResult(false, $"Exception Occurred : {ex.Message}.");
             }
         }
     }

@@ -1,0 +1,97 @@
+﻿@model ActivityViewModel
+@{
+    ViewData["Title"] = "Activity";
+}
+
+<!---------------------------------------------[Main Content Start]---------------------------------------------->
+<div class="shadow shadow-primary shadow-intensity-lg p-3">
+    <h2 class="h5 mb-4 fw-bold">Activities</h2>
+
+    <form method="post" asp-controller="activity" asp-action="index">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+            <div class="d-block mb-4 mb-md-0">
+                <a asp-controller="activity" asp-action="Create" class="btn btn-sm btn-primary d-inline-flex align-items-center">
+                    <i class="fa-solid fa-circle-plus"></i>&nbsp;Create
+                </a>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="type" class="form-label">Type</label>
+                <select style="width: 100%" asp-for="Type" asp-items="Html.GetEnumSelectList<ActivityType>()" class="select2 form-control" id="type">
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="status" class="form-label">Status</label>
+                <select style="width: 100%" asp-for="Status" name="status" asp-items="Html.GetEnumSelectList<ActivityStatus>()" class="select2 form-control" id="status">
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="officer" class="form-label">Officer</label>
+                <select style="width: 100%" asp-for="Officer" name="officer" class="select2 form-control" id="officer">
+                    @foreach (var item in ViewBag.Officers as List<SelectModel>)
+                    {
+                        <option value="@item.Value">@item.Option</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="startDate" class="form-label">From Date</label>
+                <input asp-for="From" id="startDate" class="form-control" type="datetime-local"/>
+            </div>
+            <div class="col-md-2">
+                <label for="endDate" class="form-label">To Date</label>
+                <input asp-for="To" id="endDate" class="form-control" type="datetime-local"/>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mb-4">
+        <hr>
+    </div>
+
+    @if (Model.Activities.Any())
+    {
+        <div class="card card-body table-wrapper table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="table-dark border-3 border-dark">
+                    <tr>
+                        <th class="col">Type</th>
+                        <th class="col">Officer</th>
+                        <th class="col">Start</th>
+                        <th class="col">End</th>
+                        <th class="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="table-white border-dark">
+                    @foreach (var item in Model.Activities)
+                    {
+                        <tr class="align-middle">
+                            <td>@item.Type</td>
+                            <td>@item.Officer.Name</td>
+                            <td>@item.StartDateTime</td>
+                            <td>@item.EndDateTime</td>
+                            <td>@item.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p style="text-align:center">No Activity Found.</p>
+    }
+</div>
+<!----------------------------------------------[Main Content End]----------------------------------------------->
+
+<script>
+    $(document).ready(function () {
+        // Apply Select2 to the dropdown
+        $('.select2').select2();
+    });
+</script>

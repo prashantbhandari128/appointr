@@ -13,5 +13,6 @@ namespace Appointr.Service.Interface
         Task<AppointmentStatus> GetAppointmentStatusByIdAsync(Guid appointmentid);
         Task<OperationResult<Appointment>> AddAppointmentAsync(AppointmentDto appointmentDto);
         Task<OperationResult<Appointment>> UpdateAppointmentAsync(AppointmentDto appointmentDto);
+        Task<ProcessResult> CancelAppointmentAsync(Guid appointmentid);
     }
 }

@@ -72,6 +72,12 @@
                                     <a asp-controller="appointment" asp-action="edit" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-secondary d-inline-flex align-items-center">
                                         <i class="fa-sharp fa-solid fa-pen-to-square"></i>&nbsp;Edit
                                     </a>
+                                    @if (item.Status == AppointmentStatus.Active || item.Status == AppointmentStatus.Deactivated)
+                                    {
+                                        <a asp-controller="appointment" asp-action="cancel" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-danger d-inline-flex align-items-center">
+                                            <i class="fa-solid fa-xmark"></i>&nbsp;Cancel
+                                        </a>
+                                    }
                                 </td>
                             </tr>
                         }

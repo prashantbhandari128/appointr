@@ -2,7 +2,9 @@
 using Appointr.Enum;
 using Appointr.Helper.Data.Toastr;
 using Appointr.Helper.Interface;
+using Appointr.Persistence.Entities;
 using Appointr.Service.Interface;
+using Appointr.ViewModel;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,9 +25,21 @@ namespace Appointr.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            ActivityViewModel activityViewModel = new ActivityViewModel();
+            ViewBag.Officers = await _officerService.GetOfficersSelectAsync();
+            activityViewModel.Activities = await _activityService.GetAllActivityAsync();
+            return View(activityViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(ActivityViewModel activityViewModel)
+        {
+            ViewBag.Officers = await _officerService.GetOfficersSelectAsync();
+            activityViewModel.Activities = await _activityService.FilterActivityAsync(activityViewModel.Type, activityViewModel.Status, activityViewModel.Officer, activityViewModel.From, activityViewModel.To);
+            return View(activityViewModel);
         }
 
         [HttpGet]

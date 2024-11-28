@@ -3,6 +3,7 @@ using Appointr.Enum;
 using Appointr.Helper.Data.Toastr;
 using Appointr.Helper.Interface;
 using Appointr.Persistence.Entities;
+using Appointr.Service.Implementation;
 using Appointr.Service.Interface;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace Appointr.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<Appointment> appointments = await _appointmentService.GetAllAppointmentsAsync();
@@ -237,6 +239,21 @@ namespace Appointr.Controllers
             ViewBag.Officers = await _officerService.GetOfficersSelectAsync();
             ViewBag.Visitors = await _visitorService.GetVisitorsSelectAsync();
             return View(appointmentDto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Cancel(Guid id)
+        {
+            var result = await _appointmentService.CancelAppointmentAsync(id);
+            if (result.Status == true)
+            {
+                _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Success);
+            }
+            else
+            {
+                _toastrHelper.SendMessage(this, "Appointr", result.Message, MessageType.Error);
+            }
+            return RedirectToAction("Index");
         }
     }
 }

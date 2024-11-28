@@ -6,6 +6,7 @@ using Appointr.Service.Interface;
 using Appointr.Service.Result;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Appointr.Service.Implementation
 {
@@ -43,6 +44,17 @@ namespace Appointr.Service.Implementation
             {
                 return new OperationResult<Activity>(false, $"Exception Occurred : {ex.Message}", 0, null);
             }
+        }
+
+        public async Task<List<Activity>> FilterActivityAsync(ActivityType type, ActivityStatus status, Guid officer, DateTime from, DateTime to)
+        {
+            return await _unitOfWork.Activities.GetQueryable().Include(x => x.Officer).Where(record =>
+                record.Type == type &&
+                record.Status == status &&
+                record.OfficerId == officer &&
+                record.StartDateTime >= from &&
+                record.EndDateTime <= to
+            ).ToListAsync();
         }
     }
 }
